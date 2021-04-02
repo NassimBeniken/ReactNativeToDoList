@@ -1,8 +1,9 @@
 import React from 'react'
 import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
+import * as Animatable from "react-native-animatable"
 
-export default class AddButton extends React.Component {
+class AddButton extends React.Component {
     constructor(props) {
         super(props)
     }
@@ -31,3 +32,5 @@ const styles = StyleSheet.create({
         shadowOffset: { height: 7 },
       }
 })
+
+export default Animatable.createAnimatableComponent(AddButton)

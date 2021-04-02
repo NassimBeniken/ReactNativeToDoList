@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../header/Header'
-import { StyleSheet, Dimensions, View, FlatList, Text, Button } from 'react-native'
+import { StyleSheet, Dimensions, View, FlatList, Button, TextInput} from 'react-native'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
@@ -14,8 +14,6 @@ export default class MainScreen extends React.Component {
             isViewVisible: false
         }
     }
-
-    //MyButton = Animatable.createAnimatableComponent(AddButton)
 
     handleModalRef = ref => this.modal = ref
     handleModalContainerRef = ref => this.modalContainer = ref
@@ -36,7 +34,7 @@ export default class MainScreen extends React.Component {
                 { this.state.isViewVisible ? (
                     <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
-                            <Text>Le texte visible</Text>
+                            <TextInput style={styles.textInput} placeholder="Votre tâche"/>
                             <Button title="Cacher" onPress={() => {
                                 this.modal.bounceOutDown().then(endstate => this.setState({
                                     isViewVisible: false
@@ -46,9 +44,10 @@ export default class MainScreen extends React.Component {
                         </Animatable.View>
                     </Animatable.View>
                 ) : null }
-                <Animatable.View animation="bounceInDown" iterationCount={1}>
-                    <AddButton function={this.handlePress}/>
-                </Animatable.View>
+                    <AddButton 
+                        function={this.handlePress}
+                        animation="bounceInDown"
+                        useNativeDriver={true}/>
             </View>
         )
     }
@@ -106,11 +105,11 @@ const styles = StyleSheet.create({
     },
     dialog_container: {
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-evenly",
         padding: 20,
         backgroundColor: 'rgba(12, 155, 153, 1.0)',
         borderRadius: 10,
-        height: "20%",
+        height: 200,
         width: "70%",
         opacity: 1
     },
@@ -126,5 +125,11 @@ const styles = StyleSheet.create({
         elevation: 15,
         shadowOpacity: 0.2,
         shadowOffset: { height: 7 },
+    },
+    textInput: {
+        borderRadius: 4,
+        backgroundColor: "#FFF",
+        padding: 10,
+        width: "90%"
     }
   })
