@@ -16,6 +16,7 @@ export default class MainScreen extends React.Component {
     }
 
     handleModalRef = ref => this.modal = ref
+    handleModalContainerRef = ref => this.modalContainer = ref
 
     render() {
         return(
@@ -31,16 +32,17 @@ export default class MainScreen extends React.Component {
                     />
                 </View>
                 { this.state.isViewVisible ? (
-                    <View style={styles.dialog}>
+                    <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
                             <Text>Le texte visible</Text>
                             <Button title="Cacher" onPress={() => {
                                 this.modal.bounceOutDown().then(endstate => this.setState({
                                     isViewVisible: false
                                 }))
+                                this.modalContainer.fadeOut()
                              }}/>
                         </Animatable.View>
-                    </View>
+                    </Animatable.View>
                 ) : null }
                 <TouchableOpacity accessibilityRole="button" style={styles.button} onPress={() => this.handlePress()}>
                     <AntDesign name="plus" size={40} color="#FFFFFF" />
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
         right: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(227, 239, 239,0.8)",
+        backgroundColor: "rgba(227, 239, 239,0.9)",
     },
     dialog_container: {
         alignItems: "center",
