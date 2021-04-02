@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from '../header/Header'
-import { TouchableOpacity, StyleSheet, Dimensions, View, FlatList, Text, Button } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Dimensions, View, FlatList, Text, Button } from 'react-native'
 import ListItem from '../ListItem/ListItem'
-import * as Animatable from "react-native-animatable";
+import * as Animatable from "react-native-animatable"
+import AddButton from '../AddButton/AddButton'
 
 export default class MainScreen extends React.Component {
     constructor(props) {
@@ -14,6 +14,8 @@ export default class MainScreen extends React.Component {
             isViewVisible: false
         }
     }
+
+    //MyButton = Animatable.createAnimatableComponent(AddButton)
 
     handleModalRef = ref => this.modal = ref
     handleModalContainerRef = ref => this.modalContainer = ref
@@ -44,9 +46,9 @@ export default class MainScreen extends React.Component {
                         </Animatable.View>
                     </Animatable.View>
                 ) : null }
-                <TouchableOpacity accessibilityRole="button" style={styles.button} onPress={() => this.handlePress()}>
-                    <AntDesign name="plus" size={40} color="#FFFFFF" />
-                </TouchableOpacity>
+                <Animatable.View animation="bounceInDown" iterationCount={1}>
+                    <AddButton function={this.handlePress}/>
+                </Animatable.View>
             </View>
         )
     }
@@ -111,5 +113,18 @@ const styles = StyleSheet.create({
         height: "20%",
         width: "70%",
         opacity: 1
+    },
+    other: {
+        backgroundColor: "#0C9B99",
+        padding: 10,
+        borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        bottom: 20,
+        left: 20,
+        elevation: 15,
+        shadowOpacity: 0.2,
+        shadowOffset: { height: 7 },
     }
   })
