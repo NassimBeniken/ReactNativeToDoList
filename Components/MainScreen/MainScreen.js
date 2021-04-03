@@ -4,6 +4,7 @@ import { StyleSheet, Dimensions, View, FlatList, Button, TextInput} from 'react-
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default class MainScreen extends React.Component {
     constructor(props) {
@@ -11,12 +12,22 @@ export default class MainScreen extends React.Component {
         this.state = {
             tasks: [],
             counter: 1,
-            isViewVisible: false
+            isViewVisible: false,
+            showDate: false,
+            date: new Date()
         }
     }
 
     handleModalRef = ref => this.modal = ref
     handleModalContainerRef = ref => this.modalContainer = ref
+
+    onDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || this.state.date
+        this.setState({
+            date: currentDate,
+            showDate: false
+        })
+    }
 
     render() {
         return(
@@ -35,6 +46,14 @@ export default class MainScreen extends React.Component {
                     <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
                             <TextInput style={styles.textInput} placeholder="Votre tâche"/>
+                            <Button title="Date" onPress={() => this.setState({showDate: true})}/>
+                            { this.state.showDate ? (
+                                <DateTimePicker 
+                                    value={this.state.date} 
+                                    onChange={this.onDateChange}
+                                    display="calendar"
+                                    style={{width: "100%", height: 30}}/>
+                            ) : null}
                             <Button title="Cacher" onPress={() => {
                                 this.modal.bounceOutDown().then(endstate => this.setState({
                                     isViewVisible: false
@@ -69,7 +88,8 @@ export default class MainScreen extends React.Component {
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1
+        flex: 1,
+        minHeight: Math.round(Dimensions.get('window').height),
     },
     button: {
       backgroundColor: "#0C9B99",
@@ -104,14 +124,17 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(227, 239, 239,0.9)",
     },
     dialog_container: {
+        position: "absolute",
+        top: "30%",
         alignItems: "center",
         justifyContent: "space-evenly",
         padding: 20,
-        backgroundColor: 'rgba(12, 155, 153, 1.0)',
-        borderRadius: 10,
+        backgroundColor: '#FFF',
         height: 200,
-        width: "70%",
-        opacity: 1
+        width: "90%",
+        elevation: 15,
+        shadowOpacity: 0.2,
+        shadowOffset: { height: 7 },
     },
     other: {
         backgroundColor: "#0C9B99",
@@ -127,9 +150,13 @@ const styles = StyleSheet.create({
         shadowOffset: { height: 7 },
     },
     textInput: {
-        borderRadius: 4,
+        borderRadius: 7,
+        borderWidth: 2,
+        borderColor: "#0C9B99",
         backgroundColor: "#FFF",
         padding: 10,
-        width: "90%"
+        width: "90%",
+        color: "#0C9B99",
+        fontFamily: "Montserrat-Regular"
     }
   })
