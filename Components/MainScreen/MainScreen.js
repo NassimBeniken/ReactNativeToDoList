@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../header/Header'
-import { StyleSheet, Dimensions, View, FlatList, Button, TextInput} from 'react-native'
+import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform} from 'react-native'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
@@ -14,7 +14,8 @@ export default class MainScreen extends React.Component {
             counter: 1,
             isViewVisible: false,
             showDate: false,
-            date: new Date()
+            date: new Date(),
+            tache: ""
         }
     }
 
@@ -45,38 +46,45 @@ export default class MainScreen extends React.Component {
                 { this.state.isViewVisible ? (
                     <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
-                            <TextInput style={styles.textInput} placeholder="Votre tâche"/>
-                            <Button title="Date" onPress={() => this.setState({showDate: true})}/>
-                            { this.state.showDate ? (
-                                <DateTimePicker 
+                            <TextInput style={styles.textInput} placeholder="Votre tâche" onChangeText={text => this.setState({ tache: text})} />
+                            { Platform.OS === 'android' ? (
+                                <Button title="Date" onPress={() => this.setState({showDate: true})}/>
+                            ) : null}
+                            { Platform.OS === 'ios' || this.state.showDate === true ? (
+                                <View style={{width: "100%", alignItems: "center"}}>
+                                    <DateTimePicker 
                                     value={this.state.date} 
                                     onChange={this.onDateChange}
                                     display="calendar"
-                                    style={{width: "100%", height: 30}}/>
-                            ) : null}
-                            <Button title="Cacher" onPress={() => {
-                                this.modal.bounceOutDown().then(endstate => this.setState({
-                                    isViewVisible: false
-                                }))
-                                this.modalContainer.fadeOut()
-                             }}/>
+                                    style={{width: "40%", height: 30}}/>
+                                </View>
+                            ) : null} 
+                            <Button title="Valider" onPress={this.handleValidateButtonPress}/>
                         </Animatable.View>
                     </Animatable.View>
                 ) : null }
                     <AddButton 
-                        function={this.handlePress}
+                        function={this.handleAddButtonPress}
                         animation="bounceInDown"
                         useNativeDriver={true}/>
             </View>
         )
     }
 
-    handlePress = () => {
+    handleAddButtonPress = () => {
         this.setState({
-            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: "Nouvelle tache  " + this.state.counter}]),
-            counter: this.state.counter + 1,
             isViewVisible: true
         })
+    }
+    handleValidateButtonPress = () => {
+        this.setState({
+            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache }]),
+            counter: this.state.counter + 1
+        })
+        this.modal.bounceOutDown().then(endstate => this.setState({
+            isViewVisible: false
+        }))
+        this.modalContainer.fadeOut()
     }
 
     deleteItemByKey = (key) => {
