@@ -8,19 +8,26 @@ class ListItem extends React.Component {
     constructor(props) {
         super(props)
     }
+
+    handleItemRef = ref => this.list_item = ref
+
     render() {
         const item = this.props.item
         const deleteItem = this.props.function
         const date = this.props.item.date
         return(
-            <Animatable.View style={styles.taskView} animation="bounceInDown" iterationCount={1}>
-                <TouchableOpacity activeOpacity={0.5} onLongPress={() => deleteItem(item.key)} onPress={() => console.log("OnPress")}>
+            <Animatable.View ref={this.handleItemRef} style={styles.taskView} animation="bounceInDown" iterationCount={1}>
+                <TouchableOpacity 
+                    activeOpacity={0.5} 
+                    onLongPress={() => {
+                        this.list_item.bounceOutLeft().then(endstate => deleteItem(item.key))
+                        }}>
                     <View style={{flexDirection: "row", marginBottom: 5}}>
-                        <Ionicons name="today-sharp" size={24} color="#0C9B99" />
+                        <Ionicons name="today-sharp" size={20} color="#0C9B99" />
                         <Text style={styles.date}>{date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()}</Text>
                     </View>
-                    <View style={{flexDirection: "row"}}>
-                        <MaterialIcons name="subdirectory-arrow-right" size={24} color="#0C9B99" />
+                    <View style={{flexDirection: "row", paddingRight: 20}}>
+                        <MaterialIcons name="subdirectory-arrow-right" size={20} color="#0C9B99" />
                         <Text style={styles.taskText}>{this.props.item.text}</Text>
                     </View>
                 </TouchableOpacity>
@@ -45,13 +52,14 @@ const styles = StyleSheet.create({
     },
     taskText: {
         fontFamily: "Montserrat-Regular",
-        fontSize: 20,
-        paddingLeft: 10
+        fontSize: 15,
+        marginLeft: 10,
+        textAlign: "justify"
     },
     date: {
-        fontSize: 20 ,
+        fontSize: 17 ,
         fontFamily: "Montserrat-Regular",
-        paddingLeft: 10,
+        marginLeft: 10,
         color: "#0C9B99"
     }
 })

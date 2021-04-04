@@ -16,7 +16,8 @@ export default class MainScreen extends React.Component {
             isViewVisible: false,
             showDate: false,
             date: new Date(),
-            tache: ""
+            tache: "",
+            dateText: "Date"
         }
     }
 
@@ -27,6 +28,7 @@ export default class MainScreen extends React.Component {
         const currentDate = selectedDate || this.state.date
         this.setState({
             date: currentDate,
+            dateText: currentDate.getDate() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getFullYear(),
             showDate: false
         })
     }
@@ -51,7 +53,7 @@ export default class MainScreen extends React.Component {
                             { Platform.OS === 'android' ? (
                                 <TouchableOpacity style={styles.validateButton} onPress={() => this.setState({showDate: true})}>
                                     <Ionicons name="today-sharp" size={24} color="#FFF" />
-                                    <Text style={styles.dateButton}>Date</Text>
+                                    <Text style={styles.dateButton}>{this.state.dateText}</Text>
                                 </TouchableOpacity>
                             ) : null}
                             { Platform.OS === 'ios' || this.state.showDate === true ? (
