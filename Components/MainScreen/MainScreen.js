@@ -79,7 +79,7 @@ export default class MainScreen extends React.Component {
     handleValidateButtonPress = () => {
         Keyboard.dismiss()
         this.setState({
-            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache }]),
+            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache, date: this.state.date }]),
             counter: this.state.counter + 1
         })
         this.modal.bounceOutDown().then(endstate => this.setState({

@@ -11,7 +11,7 @@
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/datetimepicker": "^3.0.4",
     "@use-expo/font": "^2.0.0",
-    "expo": "~40.0.0",
+    "expo": "^40.0.1",
     "expo-app-loading": "^1.0.1",
     "expo-blur": "~8.2.2",
     "expo-status-bar": "~1.0.3",

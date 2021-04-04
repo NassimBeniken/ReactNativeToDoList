@@ -9,6 +9,7 @@ class ListItem extends React.Component {
     render() {
         const item = this.props.item
         const deleteItem = this.props.function
+        const date = this.props.item.date
         return(
             <Animatable.View style={styles.taskView} animation="bounceInDown" iterationCount={1}>
                 <TouchableOpacity activeOpacity={0.5} onLongPress={() => deleteItem(item.key)} onPress={() => console.log("OnPress")}>
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
         shadowOffset: { height: 10 },
         borderColor: "#0C9B99",
         borderWidth: 2,
-        height: 70
+        minHeight: 70
     },
     taskText: {
         fontFamily: "Montserrat-Regular",
