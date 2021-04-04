@@ -1,10 +1,11 @@
 import React from 'react'
 import Header from '../header/Header'
-import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform, Keyboard} from 'react-native'
+import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform, Keyboard, TouchableOpacity, Text} from 'react-native'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { Ionicons } from '@expo/vector-icons'
 
 export default class MainScreen extends React.Component {
     constructor(props) {
@@ -48,7 +49,10 @@ export default class MainScreen extends React.Component {
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
                             <TextInput style={styles.textInput} placeholder="Votre tâche" onChangeText={text => this.setState({ tache: text})} />
                             { Platform.OS === 'android' ? (
-                                <Button title="Date" onPress={() => this.setState({showDate: true})}/>
+                                <TouchableOpacity style={styles.validateButton} onPress={() => this.setState({showDate: true})}>
+                                    <Ionicons name="today-sharp" size={24} color="#FFF" />
+                                    <Text style={styles.dateButton}>Date</Text>
+                                </TouchableOpacity>
                             ) : null}
                             { Platform.OS === 'ios' || this.state.showDate === true ? (
                                 <View style={{width: "100%", alignItems: "center"}}>
@@ -58,8 +62,10 @@ export default class MainScreen extends React.Component {
                                     display="calendar"
                                     style={{width: "40%", height: 30}}/>
                                 </View>
-                            ) : null} 
-                            <Button title="Valider" onPress={this.handleValidateButtonPress}/>
+                            ) : null}
+                            <TouchableOpacity style={styles.validateButton} onPress={this.handleValidateButtonPress}>
+                                <Ionicons name="ios-checkmark-done" size={24} color="#FFF" />
+                            </TouchableOpacity>
                         </Animatable.View>
                     </Animatable.View>
                 ) : null }
@@ -73,7 +79,8 @@ export default class MainScreen extends React.Component {
 
     handleAddButtonPress = () => {
         this.setState({
-            isViewVisible: true
+            isViewVisible: true,
+            tache: ""
         })
     }
     handleValidateButtonPress = () => {
@@ -139,7 +146,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-evenly",
         padding: 20,
         borderRadius: 10,
-        borderWidth: 3,
+        borderWidth: 1,
         borderColor: "#0C9B99",
         backgroundColor: '#FFF',
         height: 200,
@@ -163,12 +170,26 @@ const styles = StyleSheet.create({
     },
     textInput: {
         borderRadius: 7,
-        borderWidth: 2,
-        borderColor: "#0C9B99",
+        borderWidth: 1,
+        borderColor: "#C7CECE",
         backgroundColor: "#FFF",
         padding: 10,
         width: "90%",
         color: "#0C9B99",
         fontFamily: "Montserrat-Regular"
+    },
+    validateButton: {
+        flexDirection: "row",
+        backgroundColor: "#0C9B99",
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 10
+    },
+    dateButton: {
+        fontFamily: "Montserrat-Medium",
+        paddingLeft: 10,
+        color: "#FFF"
     }
   })
