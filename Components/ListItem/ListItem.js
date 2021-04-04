@@ -1,6 +1,8 @@
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
-import * as Animatable from "react-native-animatable";
+import * as Animatable from "react-native-animatable"
+import { Ionicons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 class ListItem extends React.Component {
     constructor(props) {
@@ -13,8 +15,14 @@ class ListItem extends React.Component {
         return(
             <Animatable.View style={styles.taskView} animation="bounceInDown" iterationCount={1}>
                 <TouchableOpacity activeOpacity={0.5} onLongPress={() => deleteItem(item.key)} onPress={() => console.log("OnPress")}>
-                    <Text style={styles.date}>{date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()}</Text>
-                    <Text style={styles.taskText}>{this.props.item.text}</Text>
+                    <View style={{flexDirection: "row", marginBottom: 5}}>
+                        <Ionicons name="today-sharp" size={24} color="#0C9B99" />
+                        <Text style={styles.date}>{date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()}</Text>
+                    </View>
+                    <View style={{flexDirection: "row"}}>
+                        <MaterialIcons name="subdirectory-arrow-right" size={24} color="#0C9B99" />
+                        <Text style={styles.taskText}>{this.props.item.text}</Text>
+                    </View>
                 </TouchableOpacity>
             </Animatable.View>
             
@@ -29,6 +37,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: "#FFFFFF",
         marginTop: 10,
+        elevation: 10,
         shadowOpacity: 0.2,
         shadowOffset: { height: 10 },
         borderColor: "#0C9B99",
@@ -36,11 +45,14 @@ const styles = StyleSheet.create({
     },
     taskText: {
         fontFamily: "Montserrat-Regular",
-        fontSize: 20
+        fontSize: 20,
+        paddingLeft: 10
     },
     date: {
         fontSize: 20 ,
-        fontFamily: "Montserrat-Regular"
+        fontFamily: "Montserrat-Regular",
+        paddingLeft: 10,
+        color: "#0C9B99"
     }
 })
 
