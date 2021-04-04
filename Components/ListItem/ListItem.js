@@ -13,6 +13,7 @@ class ListItem extends React.Component {
         return(
             <Animatable.View style={styles.taskView} animation="bounceInDown" iterationCount={1}>
                 <TouchableOpacity activeOpacity={0.5} onLongPress={() => deleteItem(item.key)} onPress={() => console.log("OnPress")}>
+                    <Text style={styles.date}>{date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()}</Text>
                     <Text style={styles.taskText}>{this.props.item.text}</Text>
                 </TouchableOpacity>
             </Animatable.View>
@@ -24,20 +25,22 @@ class ListItem extends React.Component {
 
 const styles = StyleSheet.create({
     taskView: {
-        paddingHorizontal: 20,
-        justifyContent: "center",
+        padding: 20,
         borderRadius: 8,
         backgroundColor: "#FFFFFF",
         marginTop: 10,
         shadowOpacity: 0.2,
         shadowOffset: { height: 10 },
         borderColor: "#0C9B99",
-        borderWidth: 2,
-        minHeight: 70
+        borderWidth: 2
     },
     taskText: {
         fontFamily: "Montserrat-Regular",
         fontSize: 20
+    },
+    date: {
+        fontSize: 20 ,
+        fontFamily: "Montserrat-Regular"
     }
 })
 
