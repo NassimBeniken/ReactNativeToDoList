@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../header/Header'
-import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform} from 'react-native'
+import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform, Keyboard} from 'react-native'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
@@ -77,6 +77,7 @@ export default class MainScreen extends React.Component {
         })
     }
     handleValidateButtonPress = () => {
+        Keyboard.dismiss()
         this.setState({
             tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache }]),
             counter: this.state.counter + 1
@@ -137,6 +138,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-evenly",
         padding: 20,
+        borderRadius: 10,
+        borderWidth: 3,
+        borderColor: "#0C9B99",
         backgroundColor: '#FFF',
         height: 200,
         width: "90%",
