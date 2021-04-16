@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from 'react-native'
 import * as Animatable from "react-native-animatable"
 import { Ionicons } from '@expo/vector-icons'
 import { MaterialIcons } from '@expo/vector-icons'
@@ -7,28 +7,46 @@ import { MaterialIcons } from '@expo/vector-icons'
 class ListItem extends React.Component {
     constructor(props) {
         super(props)
+        this.item = this.props.item
+        this.deleteItem = this.props.function
+        this.date = this.props.item.date
     }
 
     handleItemRef = ref => this.list_item = ref
 
+    handleLongPress = () => {
+        Alert.alert(
+            "Suppression",
+            "Voulez-vous vraiment supprimer cette tâche ?",
+            [
+                {
+                    text: "Annuler",
+                    style: "default"
+                },
+                {
+                    text: "Oui",
+                    onPress: () => {
+                        this.list_item.bounceOutLeft().then(endstate => this.deleteItem(this.item.key))
+                    },
+                    style: "destructive"
+                }
+            ]
+        )
+    }
+
     render() {
-        const item = this.props.item
-        const deleteItem = this.props.function
-        const date = this.props.item.date
         return(
             <Animatable.View ref={this.handleItemRef} style={styles.taskView} animation="bounceInDown" iterationCount={1}>
                 <TouchableOpacity 
                     activeOpacity={0.5} 
-                    onLongPress={() => {
-                        this.list_item.bounceOutLeft().then(endstate => deleteItem(item.key))
-                        }}>
+                    onLongPress={() => this.handleLongPress()}>
                     <View style={{flexDirection: "row", marginBottom: 5}}>
                         <Ionicons name="today-sharp" size={20} color="#0C9B99" />
-                        <Text style={styles.date}>{date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear()}</Text>
+                        <Text style={styles.date}>{this.date.getDate() + "-" + (this.date.getMonth() + 1) + "-" + this.date.getFullYear()}</Text>
                     </View>
                     <View style={{flexDirection: "row", paddingRight: 20}}>
                         <MaterialIcons name="subdirectory-arrow-right" size={20} color="#0C9B99" />
-                        <Text style={styles.taskText}>{this.props.item.text}</Text>
+                        <Text style={styles.taskText}>{this.item.text}</Text>
                     </View>
                 </TouchableOpacity>
             </Animatable.View>

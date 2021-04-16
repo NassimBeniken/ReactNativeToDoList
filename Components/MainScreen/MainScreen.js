@@ -1,6 +1,6 @@
 import React from 'react'
 import Header from '../header/Header'
-import { StyleSheet, Dimensions, View, FlatList, Button, TextInput, Platform, Keyboard, TouchableOpacity, Text} from 'react-native'
+import { StyleSheet, Dimensions, View, FlatList, TextInput, Platform, Keyboard, TouchableOpacity, Text } from 'react-native'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
@@ -20,6 +20,31 @@ export default class MainScreen extends React.Component {
             dateText: "Date"
         }
     }
+
+    /* componentDidMount = () => {
+        this.load()
+    } */
+
+    /* save = async() => {
+        try {
+            await AsyncStorage.setItem("tasks", JSON.stringify(this.state.tasks))
+        } catch(err) {
+            console.log(err)
+        }
+    } */
+
+    /* load = async() => {
+        try {
+            let jsonValue = await AsyncStorage.getItem("tasks")
+            if(jsonValue !== null) {
+                this.setState({
+                    tasks: JSON.parse(jsonValue)
+                })
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    } */
 
     handleModalRef = ref => this.modal = ref
     handleModalContainerRef = ref => this.modalContainer = ref
@@ -49,7 +74,7 @@ export default class MainScreen extends React.Component {
                 { this.state.isViewVisible ? (
                     <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
-                            <TextInput style={styles.textInput} placeholder="Votre tâche" onChangeText={text => this.setState({ tache: text})} />
+                            <TextInput style={styles.textInput} placeholder="Votre tâche..." onChangeText={text => this.setState({ tache: text})} />
                             { Platform.OS === 'android' ? (
                                 <TouchableOpacity style={styles.validateButton} onPress={() => this.setState({showDate: true})}>
                                     <Ionicons name="today-sharp" size={24} color="#FFF" />
@@ -87,6 +112,7 @@ export default class MainScreen extends React.Component {
     }
     handleValidateButtonPress = () => {
         Keyboard.dismiss()
+        /* this.save() */
         this.setState({
             tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache, date: this.state.date }]),
             counter: this.state.counter + 1
