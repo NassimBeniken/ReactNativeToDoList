@@ -1,18 +1,21 @@
 import React from 'react'
 import Header from '../header/Header'
 import { StyleSheet, Dimensions, View, FlatList, TextInput, Platform, Keyboard, TouchableOpacity, Text } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import ListItem from '../ListItem/ListItem'
 import * as Animatable from "react-native-animatable"
 import AddButton from '../AddButton/AddButton'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Ionicons } from '@expo/vector-icons'
 
+const storageKey = "taskList"
+
 export default class MainScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             tasks: [],
-            counter: 1,
+            counter: 0,
             isViewVisible: false,
             showDate: false,
             date: new Date(),
@@ -21,30 +24,18 @@ export default class MainScreen extends React.Component {
         }
     }
 
-    /* componentDidMount = () => {
-        this.load()
-    } */
-
-    /* save = async() => {
-        try {
-            await AsyncStorage.setItem("tasks", JSON.stringify(this.state.tasks))
-        } catch(err) {
-            console.log(err)
-        }
-    } */
-
-    /* load = async() => {
-        try {
-            let jsonValue = await AsyncStorage.getItem("tasks")
-            if(jsonValue !== null) {
+    componentDidMount = async() => {
+        const jsonValue = await AsyncStorage.getItem(storageKey)
+        if(jsonValue) {
+            this.setState({
+                tasks: JSON.parse(jsonValue)
+            }, () => {
                 this.setState({
-                    tasks: JSON.parse(jsonValue)
+                    counter: this.state.tasks.length
                 })
-            }
-        } catch(err) {
-            console.log(err)
+            })
         }
-    } */
+    }
 
     handleModalRef = ref => this.modal = ref
     handleModalContainerRef = ref => this.modalContainer = ref
@@ -55,13 +46,50 @@ export default class MainScreen extends React.Component {
             date: currentDate,
             dateText: currentDate.getDate() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getFullYear(),
             showDate: false
+        }, () => { this.saveTaskList() })
+    }
+
+    saveTaskList = async () => {
+        await AsyncStorage.setItem(storageKey, JSON.stringify(this.state.tasks))
+    }
+
+    handleAddButtonPress = () => {
+        this.setState({
+            isViewVisible: true,
+            tache: ""
         })
+    }
+
+    handleValidateButtonPress = () => {
+        Keyboard.dismiss()
+        const date = this.state.date.getDate() + "-" + (this.state.date.getMonth() + 1) + "-" + this.state.date.getFullYear()
+        this.setState({
+            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache, date: date }]),
+            counter: this.state.counter + 1,
+            itemAnimDelay: this.state.itemAnimDelay + 100
+        }, () => { this.saveTaskList() })
+        this.modal.bounceOutDown().then(endstate => this.setState({
+            isViewVisible: false
+        }))
+        this.modalContainer.fadeOut()
+    }
+
+    deleteItemByKey = (key) => {
+        const filteredTasks = this.state.tasks.filter(item => item.key !== key);
+        this.setState({ 
+            tasks: filteredTasks
+        }, () => { this.saveTaskList()})
     }
 
     render() {
         return(
             <View style={styles.mainContainer}>     
                 <Header title="Liste de tâches"/>
+                { this.state.tasks.length === 0 ? 
+                <View style={styles.noTasks}>
+                    <Animatable.Text style={styles.noTaskText} animation="fadeIn">Pas de tâches</Animatable.Text>
+                </View>
+                :
                 <View style={styles.listView}>
                     <FlatList
                         data={this.state.tasks} 
@@ -71,6 +99,7 @@ export default class MainScreen extends React.Component {
                         showsVerticalScrollIndicator={false}
                     />
                 </View>
+            }
                 { this.state.isViewVisible ? (
                     <Animatable.View ref={this.handleModalContainerRef} animation="fadeIn" iterationCount={1} style={styles.dialog}>
                         <Animatable.View ref={this.handleModalRef} style={styles.dialog_container} animation="bounceInUp" iterationCount={1}>
@@ -103,31 +132,6 @@ export default class MainScreen extends React.Component {
             </View>
         )
     }
-
-    handleAddButtonPress = () => {
-        this.setState({
-            isViewVisible: true,
-            tache: ""
-        })
-    }
-    handleValidateButtonPress = () => {
-        Keyboard.dismiss()
-        /* this.save() */
-        this.setState({
-            tasks: this.state.tasks.concat([{key: (this.state.counter + 1).toString(), text: this.state.tache, date: this.state.date }]),
-            counter: this.state.counter + 1
-        })
-        this.modal.bounceOutDown().then(endstate => this.setState({
-            isViewVisible: false
-        }))
-        this.modalContainer.fadeOut()
-    }
-
-    deleteItemByKey = (key) => {
-        const filteredTasks = this.state.tasks.filter(item => item.key !== key);
-        this.setState({ 
-            tasks: filteredTasks });
-      }
 }
 
 const styles = StyleSheet.create({
@@ -219,5 +223,15 @@ const styles = StyleSheet.create({
         fontFamily: "Montserrat-Medium",
         paddingLeft: 10,
         color: "#FFF"
+    },
+    noTasks: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    noTaskText: {
+        fontFamily: "Montserrat-SemiBold",
+        fontSize: 30,
+        color: "#C7CECE"
     }
   })

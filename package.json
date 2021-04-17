@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.15.2",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/datetimepicker": "^3.0.4",
     "@use-expo/font": "^2.0.0",

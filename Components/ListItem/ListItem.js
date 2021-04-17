@@ -42,7 +42,7 @@ class ListItem extends React.Component {
                     onLongPress={() => this.handleLongPress()}>
                     <View style={{flexDirection: "row", marginBottom: 5}}>
                         <Ionicons name="today-sharp" size={20} color="#0C9B99" />
-                        <Text style={styles.date}>{this.date.getDate() + "-" + (this.date.getMonth() + 1) + "-" + this.date.getFullYear()}</Text>
+                        <Text style={styles.date}>{this.date}</Text>
                     </View>
                     <View style={{flexDirection: "row", paddingRight: 20}}>
                         <MaterialIcons name="subdirectory-arrow-right" size={20} color="#0C9B99" />
